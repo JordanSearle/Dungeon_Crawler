@@ -147,10 +147,13 @@
     <Text Include="map.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="media\triangles.frag" />
+    <None Include="media\triangles.vert" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoadShaders.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

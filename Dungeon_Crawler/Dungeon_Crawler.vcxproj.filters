@@ -32,10 +32,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="media\triangles.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="media\triangles.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoadShaders.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
