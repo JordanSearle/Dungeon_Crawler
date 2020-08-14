@@ -10,6 +10,11 @@ using namespace std;
 
 GLFWwindow* window;
 unsigned int VBO, VAO, program, EBO, texture;
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
 //Takes the Users Inputs
 void processInput(GLFWwindow* window)
 {
@@ -19,10 +24,10 @@ void processInput(GLFWwindow* window)
 void initBackground() {
 	float vertices[] = {
 		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+		 1.f,    1.f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+		 1.f,   -1.f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+		-1.f,   -1.f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+		-1.0f,  1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 	};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,  // first Triangle
@@ -76,7 +81,7 @@ void initBackground() {
 	// load image, create texture and generate mipmaps
 	int width, height, nrChannels;
 	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0); 	if (data)
+	unsigned char* data = stbi_load("grass03.jpg", &width, &height, &nrChannels, 0); 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -115,17 +120,24 @@ void drawBackground() {
 int main()
 {
 	glfwInit();
-	window = glfwCreateWindow(800, 600, "Dungeon Crawler", NULL, NULL);
+	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Dunegon Crawler", NULL, NULL);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	if (window == NULL)
+	{
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
 	glfwMakeContextCurrent(window);
 	glewInit();
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	//Main render loop
 	initBackground();
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
 		static const float black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
+		
 		glClearBufferfv(GL_COLOR, 0, black);
 		glClear(GL_COLOR_BUFFER_BIT);
 		// bind textures on corresponding texture units
@@ -142,4 +154,12 @@ int main()
 	glfwDestroyWindow(window);
 
 	glfwTerminate();
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+
+	cout << width << " " << height << endl;
+	glViewport(0, 0, width, height);
 }
