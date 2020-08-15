@@ -10,7 +10,6 @@
 using namespace std;
 
 GLFWwindow* window;
-unsigned int VAO, program, texture;
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
@@ -40,10 +39,21 @@ int main()
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	//Main render loop
 
-	model background;
-	background.initProgram();
 
-	//initBackground();	
+	model background;
+	float storeVertices[] = {
+		//X   Y   Z
+		 // positions          // colors           // texture coords
+	 1.f,  1.f, 0.0f,   1.0f, 0.0f, 0.0f,   5.0f, 5.0f,   // top right
+	 1.f, -1.f, 0.0f,   0.0f, 1.0f, 0.0f,   5.0f, -5.0f,   // bottom right
+	-1.f, -1.f, 0.0f,   0.0f, 0.0f, 1.0f,   -5.0f, -5.0f,   // bottom left
+	-1.f,  1.f, 0.0f,   1.0f, 1.0f, 0.0f,   -5.0f, 5.0f    // top left  
+	};
+	std::vector<float> temp(storeVertices, storeVertices + sizeof storeVertices / sizeof storeVertices[0]);
+	background.vertices = temp;
+
+
+	background.initProgram();
 
 	while (!glfwWindowShouldClose(window))
 	{

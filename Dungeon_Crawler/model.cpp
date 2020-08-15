@@ -31,14 +31,21 @@ void model::loadTexture(const char* str)
 void model::init()
 {
 	unsigned int VBO, EBO;
-	float vertices[] = {
-		//X   Y   Z
-		 // positions          // colors           // texture coords
-	 1.f,  1.f, 0.0f,   1.0f, 0.0f, 0.0f,   5.0f, 5.0f,   // top right
-	 1.f, -1.f, 0.0f,   0.0f, 1.0f, 0.0f,   5.0f, -5.0f,   // bottom right
-	-1.f, -1.f, 0.0f,   0.0f, 0.0f, 1.0f,   -5.0f, -5.0f,   // bottom left
-	-1.f,  1.f, 0.0f,   1.0f, 1.0f, 0.0f,   -5.0f, 5.0f    // top left  
-	};
+	//If the vertices are undefined
+	if (vertices.size() == 0)
+	{
+		float storeVertices[] = {
+			//X   Y   Z
+			 // positions          // colors           // texture coords
+		 1.f,  1.f, 0.0f,   1.0f, 0.0f, 0.0f,   5.0f, 5.0f,   // top right
+		 1.f, -1.f, 0.0f,   0.0f, 1.0f, 0.0f,   5.0f, -5.0f,   // bottom right
+		-1.f, -1.f, 0.0f,   0.0f, 0.0f, 1.0f,   -5.0f, -5.0f,   // bottom left
+		-1.f,  1.f, 0.0f,   1.0f, 1.0f, 0.0f,   -5.0f, 5.0f    // top left  
+		};
+		std::vector<float> temp(storeVertices, storeVertices + sizeof storeVertices / sizeof storeVertices[0]);
+		vertices = temp;
+	}
+
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,  // first Triangle
 		1, 2, 3   // second Triangle
@@ -50,7 +57,7 @@ void model::init()
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float),&vertices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);

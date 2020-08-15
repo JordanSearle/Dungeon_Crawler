@@ -4,16 +4,18 @@
 #include "GLFW/glfw3.h"
 #include "LoadShaders.h"
 #include <iostream>
+#include <vector>
 
 class model
 {
 	public:
-		GLuint VAO;
+		GLuint VAO, textureID;
 		int programID;
-		GLuint textureID;
-		void loadTexture(const char* str);
-		void init();
-		void draw();
+		std::vector<float>vertices;
 		void initProgram();
+		void draw();
+	private:
+		void init();
+		void loadTexture(const char* str);
 };
 
