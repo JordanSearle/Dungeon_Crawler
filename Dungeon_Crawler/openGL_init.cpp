@@ -28,6 +28,7 @@ int main()
 	glfwInit();
 	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Dunegon Crawler", NULL, NULL);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glEnable(GL_DEPTH_TEST);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -40,20 +41,31 @@ int main()
 	//Main render loop
 
 
-	model background;
-	float storeVertices[] = {
+	model background;	
+	model tests;
+	tests.textureType = GL_CLAMP_TO_EDGE;
+	background.textureType = GL_REPEAT;
+	std:vector<model> store;
+	store.push_back(tests);
+	store.push_back(background);
+
+	float testVertices[] = {
 		//X   Y   Z
 		 // positions          // colors           // texture coords
-	 1.f,  1.f, 0.0f,   1.0f, 0.0f, 0.0f,   5.0f, 5.0f,   // top right
-	 1.f, -1.f, 0.0f,   0.0f, 1.0f, 0.0f,   5.0f, -5.0f,   // bottom right
-	-1.f, -1.f, 0.0f,   0.0f, 0.0f, 1.0f,   -5.0f, -5.0f,   // bottom left
-	-1.f,  1.f, 0.0f,   1.0f, 1.0f, 0.0f,   -5.0f, 5.0f    // top left  
+	 0.5f,  0.5f, -1.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // top right
+	 0.5f, -0.5f, -1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+	-0.5f, -0.5f, -1.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+	-0.5f,  0.5f, -1.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f     // top left  
 	};
-	std::vector<float> temp(storeVertices, storeVertices + sizeof storeVertices / sizeof storeVertices[0]);
-	background.vertices = temp;
+	std::vector<float> temp(testVertices, testVertices + sizeof testVertices / sizeof testVertices[0]);
 
-
-	background.initProgram();
+	tests.vertices = temp;
+	tests.initProgram("container.jpg");
+	background.initProgram("stone.png");
+	for (int i = 0; i < tests.vertices.size(); i++)
+	{
+		cout << tests.vertices[i] << " " << background.vertices[i] << endl;
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -64,10 +76,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 		// bind textures on corresponding texture units
 		glEnable(GL_DEPTH_TEST);
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		tests.draw();
 		background.draw();
-		//drawBackground();
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 

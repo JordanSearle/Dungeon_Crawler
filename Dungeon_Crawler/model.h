@@ -12,8 +12,10 @@ class model
 		GLuint VAO, textureID;
 		int programID;
 		std::vector<float>vertices;
-		void initProgram();
+		void initProgram(const char* str);
 		void draw();
+		//Config Variables:
+		GLint textureType;
 	private:
 		void init();
 		void loadTexture(const char* str);
