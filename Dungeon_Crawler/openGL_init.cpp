@@ -6,7 +6,6 @@
 #include "model.h"
 
 
-
 using namespace std;
 
 GLFWwindow* window;
@@ -43,11 +42,7 @@ int main()
 
 	model background;	
 	model tests;
-	tests.textureType = GL_CLAMP_TO_EDGE;
-	background.textureType = GL_REPEAT;
-	std:vector<model> store;
-	store.push_back(tests);
-	store.push_back(background);
+
 
 	float testVertices[] = {
 		//X   Y   Z
@@ -60,12 +55,10 @@ int main()
 	std::vector<float> temp(testVertices, testVertices + sizeof testVertices / sizeof testVertices[0]);
 
 	tests.vertices = temp;
-	tests.initProgram("container.jpg");
+	tests.config(GL_CLAMP_TO_EDGE);
+	tests.initProgram("awesomeface.png");
+
 	background.initProgram("stone.png");
-	for (int i = 0; i < tests.vertices.size(); i++)
-	{
-		cout << tests.vertices[i] << " " << background.vertices[i] << endl;
-	}
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -78,6 +71,11 @@ int main()
 		glEnable(GL_DEPTH_TEST);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		trans = glm::scale(trans, glm::vec3(0.1, 0.1, 0.1));
+		//tests.transform(trans);
 
 		tests.draw();
 		background.draw();

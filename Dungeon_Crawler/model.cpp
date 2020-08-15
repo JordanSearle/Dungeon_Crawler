@@ -28,6 +28,13 @@ void model::loadTexture(const char* str)
 	stbi_image_free(data);
 }
 
+void model::config(GLint textureType)
+{
+	textureType = textureType;
+
+	
+}
+
 void model::init()
 {
 	unsigned int VBO, EBO;
@@ -73,11 +80,18 @@ void model::init()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
+	//predefine the tranform data
+	glm::mat4 trans = glm::mat4(1.0f);
+	unsigned int transformLoc = glGetUniformLocation(programID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+
 	glBindVertexArray(0);
 }
 
 void model::draw()
 {
+	
 	glUseProgram(programID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
@@ -106,4 +120,12 @@ void model::initProgram(const char* str)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+}
+
+void model::transform(glm::mat4 trans)
+{
+	glUseProgram(programID);
+	glm::mat4 transformData = trans;
+	unsigned int transformLoc = glGetUniformLocation(programID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transformData));
 }
