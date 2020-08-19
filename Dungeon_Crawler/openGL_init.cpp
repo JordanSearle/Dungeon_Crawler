@@ -41,24 +41,29 @@ int main()
 
 
 	model background;	
-	model tests;
-
-
-	float testVertices[] = {
-		//X   Y   Z
-		 // positions          // colors           // texture coords
-	 0.5f,  0.5f, -1.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // top right
-	 0.5f, -0.5f, -1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-	-0.5f, -0.5f, -1.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-	-0.5f,  0.5f, -1.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f     // top left  
-	};
-	std::vector<float> temp(testVertices, testVertices + sizeof testVertices / sizeof testVertices[0]);
-
-	tests.vertices = temp;
-	tests.config(GL_CLAMP_TO_EDGE);
-	tests.initProgram("awesomeface.png");
-
+	model player;
+	vector<model> store;
+	//Background object
 	background.initProgram("stone.png");
+	store.push_back(background);
+	//Player Object
+	player.config(GL_CLAMP_TO_EDGE);
+	player.initProgram("awesomeface.png");
+	store.push_back(player);
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		//scenery Object(s).
+		model test;
+		test.initProgram("awesomeface.png");
+		glm::mat4 trans1 = glm::mat4(1.0f);
+		trans1 = glm::translate(trans1, glm::vec3((float)i / 10, -0.5f, 0.0f));
+		trans1 = glm::scale(trans1, glm::vec3(0.05, 0.05, 0.05));
+		test.transform(trans1);
+		store.push_back(test);
+	}
+
+	
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -74,11 +79,15 @@ int main()
 
 		glm::mat4 trans = glm::mat4(1.0f);
 		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-		trans = glm::scale(trans, glm::vec3(0.1, 0.1, 0.1));
-		//tests.transform(trans);
+		trans = glm::scale(trans, glm::vec3(0.05, 0.05, 0.05));
+		player.transform(trans);
 
-		tests.draw();
-		background.draw();
+		//player.draw();
+		//background.draw();
+		for (size_t i = 0; i < store.size(); i++)
+		{			
+			store[i].draw();
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
